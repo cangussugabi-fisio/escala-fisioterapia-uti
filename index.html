@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Escala Automatizada - Fisioterapia UTI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    :root {
+      --azul-bebe: #e3f2fd;
+      --azul-marinho: #0d47a1;
+      --verde-escuro: #1b5e20;
+      --cinza-claro: #f5f5f5;
+      --cinza-borda: #d0d0d0;
+      --texto-principal: #1f2933;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #e3f2fd 0, #ffffff 55%, #bbdefb 100%);
+      color: var(--texto-principal);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 16px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 1100px;
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+      padding: 20px 18px 22px;
+    }
+
+    @media (min-width: 768px) {
+      .app-container {
+        padding: 26px 28px 28px;
+      }
+    }
+
+    .header {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid rgba(13, 71, 161, 0.1);
+      padding-bottom: 10px;
+    }
+
+    .header-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--azul-marinho);
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    @media (min-width: 768px) {
+      .title {
+        font-size: 1.25rem;
+      }
+    }
+
+    .credit {
+      font-size: 0.73rem;
+      color: rgba(0, 0, 0, 0.45);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .subtitle {
+      font-size: 0.83rem;
+      color: rgba(0, 0, 0, 0.7);
+      max-width: 680px;
+    }
+
+    .subtitle span {
+      font-weight: 600;
+      color: var(--verde-escuro);
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 14px;
+      background: var(--azul-bebe);
+      border-radius: 12px;
+      padding: 10px 10px 12px;
+      border: 1px solid rgba(13, 71, 161, 0.2);
+    }
+
+    @media (min-width: 768px) {
+      .controls {
+        padding: 12px 14px;
+        gap: 12px;
+      }
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 110px;
+    }
+
+    .control-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.68);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    select,
+    input[type="number"] {
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(13, 71, 161, 0.35);
+      font-size: 0.85rem;
+      outline: none;
+      background: #ffffff;
+      min-height: 32px;
+    }
+
+    select:focus,
+    input[type="number"]:focus {
+      border-color: var(--azul-marinho);
+      box-shadow: 0 0 0 1px rgba(13, 71, 161, 0.15);
+    }
+
+    .btn-primary {
+      appearance: none;
+      border: none;
+      border-radius: 999px;
+      padding: 8px 18px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      cursor: pointer;
+      color: #ffffff;
+      background: linear-gradient(135deg, var(--azul-marinho), #1565c0);
+      box-shadow: 0 4px 14px rgba(13, 71, 161, 0.35);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: auto;
+      margin-top: 4px;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+      transform: translateY(-0.5px);
+    }
+
+    .btn-primary:active {
+      filter: brightness(0.98);
+      transform: translateY(0.5px);
+      box-shadow: 0 2px 8px rgba(13, 71, 161, 0.25);
+    }
+
+    .btn-primary span.icon {
+      font-size: 1rem;
+    }
+
+    .btn-secondary {
+      appearance: none;
+      border: 1px solid rgba(13, 71, 161, 0.4);
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      cursor: pointer;
+      color: var(--azul-marinho);
+      background: #ffffff;
+      box-shadow: 0 2px 8px rgba(13, 71, 161, 0.12);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background: var(--azul-bebe);
+      border-color: var(--azul-marinho);
+      transform: translateY(-0.5px);
+    }
+
+    .btn-secondary:active {
+      transform: translateY(0.5px);
+      box-shadow: 0 1px 4px rgba(13, 71, 161, 0.15);
+    }
+
+    .btn-secondary span.icon {
+      font-size: 1rem;
+    }
+
+    .action-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(13, 71, 161, 0.15);
+    }
+
+    .info-bar {
+      font-size: 0.78rem;
+      color: rgba(0, 0, 0, 0.6);
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .info-highlight {
+      font-weight: 600;
+      color: var(--verde-escuro);
+    }
+
+    .table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 14px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      background: linear-gradient(to bottom, #ffffff, #fafafa);
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 540px;
+      table-layout: fixed;
+      font-size: 0.82rem;
+    }
+
+    thead {
+      background: linear-gradient(90deg, var(--azul-marinho), #1565c0);
+      color: #ffffff;
+    }
+
+    thead th {
+      padding: 8px 6px;
+      text-align: left;
+      font-weight: 600;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+      white-space: nowrap;
+    }
+
+    thead th:nth-child(1) {
+      width: 96px;
+    }
+
+    thead th:nth-child(2) {
+      width: 140px;
+    }
+
+    thead th:nth-child(3),
+    thead th:nth-child(4) {
+      width: 140px;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.035);
+    }
+
+    tbody tr:nth-child(even) {
+      background: rgba(227, 242, 253, 0.4);
+    }
+
+    tbody tr.weekend-row {
+      background: rgba(200, 230, 201, 0.25);
+    }
+
+    td {
+      padding: 7px 6px;
+      vertical-align: middle;
+      color: #374151;
+      word-wrap: break-word;
+      hyphens: auto;
+    }
+
+    td small {
+      font-size: 0.7rem;
+      color: rgba(55, 65, 81, 0.85);
+      text-transform: lowercase;
+    }
+
+    .day-name {
+      text-transform: capitalize;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 999px;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border: 1px solid rgba(27, 94, 32, 0.45);
+      color: var(--verde-escuro);
+      background: rgba(232, 245, 233, 0.8);
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+
+    .footer-note {
+      margin-top: 10px;
+      font-size: 0.72rem;
+      color: rgba(0, 0, 0, 0.55);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .footer-note strong {
+      color: var(--azul-marinho);
+    }
+
+    /* Estilos para impressão */
+    @media print {
+      body {
+        background: #ffffff;
+        padding: 0;
+        margin: 0;
+      }
+
+      .app-container {
+        max-width: 100%;
+        box-shadow: none;
+        border-radius: 0;
+        padding: 10mm;
+        margin: 0;
+      }
+
+      .controls,
+      .action-buttons,
+      .info-bar,
+      .footer-note {
+        display: none;
+      }
+
+      .header {
+        margin-bottom: 8px;
+        padding-bottom: 6px;
+        border-bottom: 2px solid var(--azul-marinho);
+      }
+
+      .title {
+        font-size: 14pt;
+        margin-bottom: 2px;
+      }
+
+      .subtitle {
+        font-size: 9pt;
+        margin-bottom: 4px;
+      }
+
+      .credit {
+        display: none;
+      }
+
+      .table-wrapper {
+        border: 1px solid #000;
+        overflow: visible;
+      }
+
+      table {
+        font-size: 9pt;
+        min-width: 100%;
+      }
+
+      thead {
+        background: var(--azul-marinho) !important;
+        color: #ffffff;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      thead th {
+        padding: 5px 4px;
+        border: 1px solid #000;
+        font-size: 8pt;
+      }
+
+      tbody tr {
+        border: 1px solid #ccc;
+      }
+
+      tbody tr.weekend-row {
+        background: #e8f5e9 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      tbody tr:nth-child(even) {
+        background: #f5f5f5 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      td {
+        padding: 4px 3px;
+        border: 1px solid #ccc;
+        font-size: 8pt;
+      }
+
+      .badge {
+        font-size: 6pt;
+        padding: 1px 3px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .header-top-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .credit {
+        align-self: flex-end;
+      }
+      .subtitle {
+        font-size: 0.78rem;
+      }
+      thead th,
+      td {
+        padding: 6px 4px;
+      }
+      table {
+        font-size: 0.78rem;
+      }
+      .action-buttons {
+        flex-direction: column;
+      }
+      .btn-secondary {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* Loading spinner */
+    .spinner {
+      display: none;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .btn-secondary.loading .spinner {
+      display: inline-block;
+    }
+
+    .btn-secondary.loading span:not(.spinner) {
+      display: none;
+    }
+
+    /* Modal para feedback */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 400px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    .modal-content h3 {
+      color: var(--azul-marinho);
+      margin: 0 0 10px 0;
+      font-size: 1.1rem;
+    }
+
+    .modal-content p {
+      color: rgba(0, 0, 0, 0.7);
+      margin: 0 0 16px 0;
+      font-size: 0.9rem;
+    }
+
+    .modal-close-btn {
+      appearance: none;
+      border: none;
+      background: var(--azul-marinho);
+      color: #ffffff;
+      padding: 8px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .modal-close-btn:hover {
+      filter: brightness(1.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <header class="header">
+      <div class="header-top-row">
+        <div class="title"> Escala da Fisioterapia  -  UTI Adulto</div>
+        <div class="credit"> Desenvolvido por:  Gabriela Canguçu</div>
+      </div>
+      <div class="subtitle">
+        <span> SELECIONE O MÊS E ANO PARA GERAR A ESCALA </span>.
+      </div>
+    </header>
+
+    <section class="controls">
+      <div class="control-group">
+        <label class="control-label" for="mesSelect">Mês</label>
+        <select id="mesSelect">
+          <option value="1">Janeiro</option>
+          <option value="2">Fevereiro</option>
+          <option value="3">Março</option>
+          <option value="4">Abril</option>
+          <option value="5">Maio</option>
+          <option value="6">Junho</option>
+          <option value="7">Julho</option>
+          <option value="8">Agosto</option>
+          <option value="9">Setembro</option>
+          <option value="10">Outubro</option>
+          <option value="11">Novembro</option>
+          <option value="12">Dezembro</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="anoInput">Ano</label>
+        <input type="number" id="anoInput" min="2000" max="2100" />
+      </div>
+
+      <button class="btn-primary" id="btnGerar">
+        <span class="icon">📅</span>
+        <span>Gerar Escala</span>
+      </button>
+
+      <div class="action-buttons">
+        <button class="btn-secondary" id="btnImprimir">
+          <span class="icon">🖨️</span>
+          <span>Imprimir</span>
+        </button>
+        <button class="btn-secondary" id="btnCompartilharWhatsApp">
+          <span class="icon">📱</span>
+          <span>Compartilhar WhatsApp</span>
+          <span class="spinner"></span>
+        </button>
+      </div>
+    </section>
+
+    <div class="info-bar">
+      <div>
+        <span class="info-highlight"> </span>  
+      </div>   Confira cuidadosamente o dia escalado, o cumprimento dos plantões é de responsabilidade do profissional.
+      <div>
+        Visual otimizado para <span class="info-highlight">celular e desktop</span>.
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table id="tabelaEscala">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Dia da semana</th>
+            <th>Dia (turno)</th>
+            <th>Noite (turno)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Linhas geradas via JavaScript -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer-note">
+      <div>
+        <strong>Lembrete:</strong> Em caso de 5º fim de semana, a escala de sexta/sábado/domingo repete o 1º fim de semana do mês.
+      </div>
+      <div>
+        QUALQUER INCONSISTÊNCIA NA ESCALA  FAVOR COMUNICAR Á COORDENAÇÃO
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de feedback -->
+  <div class="modal-overlay" id="modalFeedback">
+    <div class="modal-content">
+      <h3 id="modalTitulo">Sucesso!</h3>
+      <p id="modalMensagem">Operação realizada com sucesso.</p>
+      <button class="modal-close-btn" onclick="document.getElementById('modalFeedback').classList.remove('active')">Fechar</button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <script>
+    // ---------------------------
+    // Funções utilitárias
+    // ---------------------------
+
+    const dayNames = [
+      "domingo",
+      "segunda-feira",
+      "terça-feira",
+      "quarta-feira",
+      "quinta-feira",
+      "sexta-feira",
+      "sábado"
+    ];
+
+    function pad2(num) {
+      return String(num).padStart(2, "0");
+    }
+
+    // Retorna número de dias do mês: 1..31
+    function getNumeroDiasMes(ano, mes) {
+      // mes: 1-12
+      return new Date(ano, mes, 0).getDate();
+    }
+
+    // Retorna {diaTurno, noiteTurno} para uma data, seguindo as regras combinadas
+    function getEscalaParaData(date) {
+      const diaDoMes = date.getDate();
+      const wd = date.getDay(); // 0=Dom,1=Seg,2=Ter,3=Qua,4=Qui,5=Sex,6=Sab
+      const ocorrencia = Math.floor((diaDoMes - 1) / 7) + 1; // 1a,2a,3a,4a,5a daquele dia naquele mês
+
+      let idxFds = ocorrencia;
+      // Se for sexta (5), sábado (6) ou domingo (0) e for 5ª ocorrência, repete padrão da 1ª
+      if ((wd === 5 || wd === 6 || wd === 0) && ocorrencia > 4) {
+        idxFds = 1;
+      }
+
+      let diaTurno = "";
+      let noiteTurno = "";
+
+      switch (wd) {
+        case 1: // Segunda-feira
+          diaTurno = "Paulo";
+          noiteTurno = "Gabriela";
+          break;
+
+        case 2: // Terça-feira
+          diaTurno = "Renata";
+          noiteTurno = "Gabriela";
+          break;
+
+        case 3: // Quarta-feira
+          diaTurno = "Gabriela";
+          noiteTurno = "Renata";
+          break;
+
+        case 4: // Quinta-feira
+          diaTurno = "Gabriela";
+          noiteTurno = "Cassio";
+          break;
+
+        case 5: // Sexta-feira
+          // Regras:
+          // Renata 2ª e 4ª sexta dia; 3ª sexta noite
+          // Maxwell 1ª e 3ª sexta dia
+          // Wesley toda sexta noite, exceto 3ª
+          switch (idxFds) {
+            case 1:
+              diaTurno = "Maxwell";
+              noiteTurno = "Wesley";
+              break;
+            case 2:
+              diaTurno = "Renata";
+              noiteTurno = "Wesley";
+              break;
+            case 3:
+              diaTurno = "Maxwell";
+              noiteTurno = "Renata";
+              break;
+            case 4:
+              diaTurno = "Renata";
+              noiteTurno = "Wesley";
+              break;
+            default:
+              diaTurno = "Maxwell";
+              noiteTurno = "Wesley";
+          }
+          break;
+
+        case 6: // Sábado
+          // Sábado dia: Wesley todos, exceto 4º = Cassio
+          // Sábado noite:
+          //   Armando: 1º e 3º sábado
+          //   Paulo: 2º e 4º sábado
+          // 5º fim de semana repete 1º → já ajustado em idxFds
+          if (idxFds === 4) {
+            diaTurno = "Cassio";
+          } else {
+            diaTurno = "Wesley";
+          }
+
+          if (idxFds === 1 || idxFds === 3) {
+            noiteTurno = "Armando";
+          } else if (idxFds === 2 || idxFds === 4) {
+            noiteTurno = "Paulo";
+          }
+          break;
+
+        case 0: // Domingo
+          // Interpretação consolidada:
+          // Domingo dia:
+          //   1º: Armando
+          //   2º: Paulo
+          //   3º: Cassio
+          //   4º: Paulo
+          // Domingo noite:
+          //   Paulo 1º e 3º domingo noite
+          //   Leticia 2º e 4º domingo noite
+          // 5º fim de semana repete 1º → já ajustado em idxFds
+          switch (idxFds) {
+            case 1:
+              diaTurno = "Armando";
+              break;
+            case 2:
+              diaTurno = "Paulo";
+              break;
+            case 3:
+              diaTurno = "Cassio";
+              break;
+            case 4:
+              diaTurno = "Paulo";
+              break;
+            default:
+              diaTurno = "Armando";
+          }
+
+          if (idxFds === 1 || idxFds === 3) {
+            noiteTurno = "Paulo";
+          } else if (idxFds === 2 || idxFds === 4) {
+            noiteTurno = "Leticia";
+          }
+          break;
+
+        default:
+          // Não deveria cair aqui, mas garantimos algo vazio se cair
+          diaTurno = "";
+          noiteTurno = "";
+      }
+
+      return {
+        diaTurno,
+        noiteTurno,
+        ocorrencia,
+        idxFds
+      };
+    }
+
+    // Gera a tabela para o mês/ano escolhidos
+    function gerarEscala() {
+      const mesSelect = document.getElementById("mesSelect");
+      const anoInput = document.getElementById("anoInput");
+      const tbody = document.querySelector("#tabelaEscala tbody");
+
+      const mes = parseInt(mesSelect.value, 10); // 1-12
+      const ano = parseInt(anoInput.value, 10);
+
+      if (isNaN(ano) || ano < 2000 || ano > 2100) {
+        alert("Por favor, preencha um ano entre 2000 e 2100.");
+        return;
+      }
+
+      const numDias = getNumeroDiasMes(ano, mes);
+      tbody.innerHTML = "";
+
+      for (let dia = 1; dia <= numDias; dia++) {
+        const data = new Date(ano, mes - 1, dia);
+        const wd = data.getDay(); // 0=Dom,1=Seg,...,6=Sab
+        const dayLabel = dayNames[wd];
+        const { diaTurno, noiteTurno, ocorrencia } = getEscalaParaData(data);
+
+        const tr = document.createElement("tr");
+
+        // Destaca final de semana
+        if (wd === 0 || wd === 6) {
+          tr.classList.add("weekend-row");
+        }
+
+        const tdData = document.createElement("td");
+        tdData.textContent = `${pad2(dia)}/${pad2(mes)}/${ano}`;
+
+        const tdDiaSemana = document.createElement("td");
+        tdDiaSemana.innerHTML = `
+          <span class="day-name">${dayLabel}</span>
+          ${
+            wd === 5 || wd === 6 || wd === 0
+              ? `<span class="badge">${ocorrencia}º ${wd === 5 ? "sexta" : wd === 6 ? "sábado" : "domingo"}</span>`
+              : ""
+          }
+        `;
+
+        const tdDiaTurno = document.createElement("td");
+        tdDiaTurno.textContent = diaTurno || "-";
+
+        const tdNoiteTurno = document.createElement("td");
+        tdNoiteTurno.textContent = noiteTurno || "-";
+
+        tr.appendChild(tdData);
+        tr.appendChild(tdDiaSemana);
+        tr.appendChild(tdDiaTurno);
+        tr.appendChild(tdNoiteTurno);
+
+        tbody.appendChild(tr);
+      }
+    }
+
+    // Função para imprimir
+    function imprimirEscala() {
+      window.print();
+    }
+
+    // Função para compartilhar via WhatsApp
+    async function compartilharWhatsApp() {
+      const btnCompartilhar = document.getElementById("btnCompartilharWhatsApp");
+      const mesSelect = document.getElementById("mesSelect");
+      const anoInput = document.getElementById("anoInput");
+      
+      try {
+        // Adiciona estado de carregamento
+        btnCompartilhar.classList.add("loading");
+
+        // Captura a tabela como imagem
+        const tabelaEscala = document.getElementById("tabelaEscala");
+        const canvas = await html2canvas(tabelaEscala, {
+          backgroundColor: "#ffffff",
+          scale: 2,
+          logging: false,
+          useCORS: true,
+          allowTaint: true
+        });
+
+        // Converte canvas para blob
+        canvas.toBlob(async (blob) => {
+          try {
+            // Cria URL temporária para a imagem
+            const imageUrl = URL.createObjectURL(blob);
+            
+            // Obtém o mês e ano para a mensagem
+            const mesNomes = ["", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", 
+                             "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+            const mes = parseInt(mesSelect.value, 10);
+            const ano = anoInput.value;
+            const mesNome = mesNomes[mes];
+            
+            // Mensagem para WhatsApp
+            const mensagem = `Escala de Fisioterapia - ${mesNome} de ${ano}`;
+            
+            // Abre WhatsApp Web (funciona em navegadores desktop e mobile)
+            const whatsappUrl = `https://web.whatsapp.com/send?text=${encodeURIComponent(mensagem)}`;
+            
+            // Abre em nova aba
+            const novaAba = window.open(whatsappUrl, '_blank');
+            
+            // Mostra mensagem de sucesso
+            mostrarModal("Sucesso!", "A imagem da escala foi preparada. Cole a imagem no WhatsApp Web que se abriu.");
+            
+            // Limpa URL temporária após um tempo
+            setTimeout(() => URL.revokeObjectURL(imageUrl), 60000);
+            
+          } catch (erro) {
+            console.error("Erro ao processar imagem:", erro);
+            mostrarModal("Erro", "Não foi possível processar a imagem. Tente novamente.");
+          } finally {
+            btnCompartilhar.classList.remove("loading");
+          }
+        }, "image/png");
+
+      } catch (erro) {
+        console.error("Erro ao capturar tabela:", erro);
+        mostrarModal("Erro", "Não foi possível capturar a escala. Tente novamente.");
+        btnCompartilhar.classList.remove("loading");
+      }
+    }
+
+    // Função para mostrar modal
+    function mostrarModal(titulo, mensagem) {
+      const modal = document.getElementById("modalFeedback");
+      document.getElementById("modalTitulo").textContent = titulo;
+      document.getElementById("modalMensagem").textContent = mensagem;
+      modal.classList.add("active");
+    }
+
+    // Configurações iniciais ao carregar a página
+    (function init() {
+      const hoje = new Date();
+      const mesAtual = hoje.getMonth() + 1; // 1-12
+      const anoAtual = hoje.getFullYear();
+
+      document.getElementById("mesSelect").value = mesAtual.toString();
+      document.getElementById("anoInput").value = anoAtual.toString();
+
+      document.getElementById("btnGerar").addEventListener("click", gerarEscala);
+      document.getElementById("btnImprimir").addEventListener("click", imprimirEscala);
+      document.getElementById("btnCompartilharWhatsApp").addEventListener("click", compartilharWhatsApp);
+
+      // Gera automaticamente para o mês/ano atual ao abrir
+      gerarEscala();
+    })();
+  </script>
+</body>
+</html>
